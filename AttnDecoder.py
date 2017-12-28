@@ -105,24 +105,3 @@ class AttnDecoderCell(Layer):
 
     def compute_output_shape(self, input_shape):
         return (input_shape[0], self.output_dim)
-
-
-if __name__ == '__main__':
-    import numpy as np
-    from keras.layers import Input, RNN
-    from keras.models import Model
-    tar_seq = np.ones((100, 30, 300))
-    enc_seq = np.ones((100, 30, 300))
-    _h_ = np.ones((100, 300))
-
-    cell = AttnDecoderCell(300)
-    attn_layer = RNN(cell, return_sequences=True)
-
-    inp_enc = Input(shape=(30, 300))
-    inp_tar = Input(shape=(30, 300))
-    inp_h = Input(shape=(300, ))
-
-    out = attn_layer(inp_tar, initial_state=inp_h, constants=[inp_enc])
-    model = Model([inp_enc, inp_tar, inp_h], out)
-    pre = model.predict([enc_seq, tar_seq, _h_])
-    print(pre)
